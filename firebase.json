@@ -1,0 +1,40 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "firebase-config.example.js",
+      "*ORIJINAL.html",
+      "ticaret_tam_yedek_2026-10-18.json",
+      "README_KURULUM_TR.md",
+      "private-backups/**",
+      "**/ticaret_tam_yedek_*.json"
+    ],
+    "cleanUrls": false,
+    "headers": [
+      {
+        "source": "/firebase-config.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
+        "source": "/index.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}

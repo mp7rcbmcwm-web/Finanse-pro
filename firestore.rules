@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Her oturum yalnızca kendi UID altındaki tek uygulama belgesini okuyup yazabilir.
+    match /users/{userId}/appData/{docId} {
+      allow read: if request.auth != null && request.auth.uid == userId && docId == 'main';
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && docId == 'main'
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.schemaVersion == 1
+        && request.resource.data.revision is int
+        && request.resource.data.revision > 0
+        && request.resource.data.payload is map
+        && request.resource.data.payload.keys().hasAll(['sales','purchases','expenses','cards','cardPays','cashMoves'])
+        && request.resource.data.payload.sales is list
+        && request.resource.data.payload.purchases is list
+        && request.resource.data.payload.expenses is list
+        && request.resource.data.payload.cards is list
+        && request.resource.data.payload.cardPays is list
+        && request.resource.data.payload.cashMoves is list;
+      allow delete: if false;
+    }
+    // Başka bütün belgeler kapalıdır.
+    match /{document=**} { allow read, write: if false; }
+  }
+}
